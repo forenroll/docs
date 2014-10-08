@@ -1,7 +1,0 @@
-http://sqlite.org/download.html
-sqlite.exe --> ruby path/bin
-
-$rails dbconsole
-.databases
-.open $path
-.tables

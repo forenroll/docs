@@ -1,6 +1,0 @@
-$ git tag ??
-$ git push origin ??
-
---- delete ----
-git tag -d ??
-git push origin :refs/tags/??

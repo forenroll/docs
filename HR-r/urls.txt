@@ -1,4 +1,0 @@
-phone
-https://mojo.redhat.com/docs/DOC-950627
-
-

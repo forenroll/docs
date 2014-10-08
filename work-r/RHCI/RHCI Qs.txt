@@ -1,6 +1,0 @@
-I see. Thanks.
-Is there any document shows the subgroups and the order in which these subgroups should be displayed.
-
-And there's one more thing.
-It is shown in "RHCI Matrix.xlsx" that the combinatin as RHELOSP 4.0 and RHEV 3.2 is imcompatible, however, information regarding what functionality is supported between the two products is not provided.
-Will the matrix be updated or it means that none of the functionality between them is supported? 

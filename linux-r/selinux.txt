@@ -1,3 +1,0 @@
-sudo vim /etc/selinux/config
-#SELINUX=enforcing
-SELINUX=disabled

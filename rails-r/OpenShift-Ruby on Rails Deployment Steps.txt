@@ -1,2 +1,0 @@
-OpenShift: Ruby on Rails Deployment Steps
-http://atkit.com/deployment/openshift-rails-deployment-steps/

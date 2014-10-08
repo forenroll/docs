@@ -1,3 +1,0 @@
-[xmeng@dhcp-192-149 .ssh]$ scp jing@10.66.192.33:/home/jing/.ssh/config .
-jing@10.66.192.33's password: 
-config                                                     
