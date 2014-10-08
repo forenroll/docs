@@ -1,0 +1,23 @@
+http://dev.mysql.com/downloads/mysql/
+
+Go to the download page for MySQL Yum repository at http://dev.mysql.com/downloads/repo/yum/.
+
+Select and download the release package for your platform.
+
+shell> sudo rpm -Uvh platform-and-version-specific-package-name.rpm
+
+For example, for version 5 of the package for EL6-based systems, the command is:
+
+shell> sudo rpm -Uvh mysql-community-release-el6-5.noarch.rpm  
+
+Installing MySQL with Yum
+
+shell> sudo yum install mysql-community-server 
+
+shell> sudo service mysqld start
+
+shell> sudo service mysqld status
+
+shell> sudo service mysqld stop
+
+shell> mysql_secure_installation

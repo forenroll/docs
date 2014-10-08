@@ -1,0 +1,218 @@
+
+
+**************************************************************** RHEL 4 *************************************************************************
+RHEL 4
+1. Mount iso: # mount -o loop,ro RHEL4.8-x86_64-AS-DVD.iso /media/rhel4dvd
+2. /etc/sysconfig/rhn/sources
+3. up2date default --> #up2date default
+4. add: dir mydvdrepo /media/cdrom/RedHat/RPMS
+
+***************************************************************** RHEL 5 ************************************************************************
+
+RHEL 5
+1. Mount iso: # mount -o loop RHEL5.9-Server-20121129.0-x86_64-DVD.iso /media/rhel5dvd
+2. Create /etc/yum.repos.d/dvd.repo
+--------------------------------------------------------------------------------------------------------------------------
+| [dvd-Server]
+| mediaid=1354216429.587870(# head -n1 /media/rhel5dvd/.discinfo)
+| name=RHEL 5 Server DVD
+| baseurl=file:///media/rhel5dvd(step1)/Server(or Client for RHEL client or Workstation)
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| enabled=1
+| gpgcheck=1
+--------------------------------------------------------------------------------------------------------------------------
+3. yum clean all (--noplugins to prevent it from connecting to RHN)
+4. OPTIONAL: To configure access to the supplementary packages in the directories Cluster, ClusterStorage, VT
+append to dvd.repo
+--------------------------------------------------------------------------------------------------------------------------
+| [dvd-cluster]
+| mediaid=1354216429.587870
+| name=DVD for RHEL5 - Cluster
+| baseurl=file:///media/rhel5dvd/Cluster
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| enabled=1
+| gpgcheck=1
+| 
+| [dvd-cluster-storage]
+| mediaid=1354216429.587870
+| name=DVD for RHEL5 - ClusterStorage
+| baseurl=file:///media/rhel5dvd/ClusterStorage
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| enabled=1
+| gpgcheck=1
+| 
+| [dvd-vt]
+| mediaid=1354216429.587870
+| name=DVD for RHEL5 - VT
+| baseurl=file:///media/rhel5dvd/VT
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| enabled=1
+| gpgcheck=1
+--------------------------------------------------------------------------------------------------------------------------
+5. OPTIONAL: To configure access to the packages in the Workstation directory
+append to dvd.repo
+--------------------------------------------------------------------------------------------------------------------------
+| [dvd-workstation]
+| mediaid=1354233478.680018
+| name=DVD for RHEL5 - Workstation
+| baseurl=file:///media/rhel5dvd/Workstation
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| enabled=1
+| gpgcheck=1
+--------------------------------------------------------------------------------------------------------------------------
+
+************************************************************** RHEL 6 **************************************************************************
+
+RHEL 6
+1. Mount iso: # mount -o loop RHEL6.4-20130130.0-Server-x86_64-DVD1.iso /media/rhel6dvd
+2.
+# cp /media/rhel6dvd/media.repo /etc/yum.repos.d/rhel6dvd.repo
+# chmod 644 /etc/yum.repos.d/rhel6dvd.repo
+3. Edit rhel6dvd.repo
+--------------------------------------------------------------------------------------------------------------------------
+| gpgcheck=0 --> gpgcheck=1
+| add:
+| enabled=1
+| baseurl=file:///media/rhel6dvd/Server(or Client or Workstation depending on the type of RHEL DVD in use)
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+--------------------------------------------------------------------------------------------------------------------------
+4. yum clean all
+5. OPTIONAL: To configure access to the supplementary packages in the directories HighAvailability, LoadBalancer, ResilientStorage, and ScalableFileSystem
+append to rhel6dvd.repo
+--------------------------------------------------------------------------------------------------------------------------
+| [dvd-HighAvailability]
+| mediaid=1359576196.686790
+| name=DVD for RHEL6 - HighAvailability
+| baseurl=file:///media/rhel6dvd/HighAvailability
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| enabled=1
+| gpgcheck=1
+| 
+| [dvd-LoadBalancer]
+| mediaid=1359576196.686790
+| name=DVD for RHEL6 - LoadBalancer
+| baseurl=file:///media/rhel6dvd/LoadBalancer
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| enabled=1
+| gpgcheck=1
+| 
+| [dvd-ResilientStorage]
+| mediaid=1359576196.686790
+| name=DVD for RHEL6 - ResilientStorage
+| baseurl=file:///media/rhel6dvd/ResilientStorage
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| enabled=1
+| gpgcheck=1
+| 
+| [dvd-ScalableFileSystem]
+| mediaid=1359576196.686790
+| name=DVD for RHEL6 - ScalableFileSystem
+| baseurl=file:///media/rhel6dvd/ScalableFileSystem
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| enabled=1
+| gpgcheck=1
+--------------------------------------------------------------------------------------------------------------------------
+
+******************************************************** OPTIONAL *******************************************************************************
+
+Configure a httpd based yum repository, which can be used by this server and another server
+Prerequisites:
+    The server hosting the yum repository must have the httpd and yum packages installed.
+    The client servers using the yum repository must have the yum package installed.
+    
+1. 
+# mkdir -p /var/www/html/cdrom/
+# mount -o loop RHELX-XXXX.iso /media
+# shopt -s dotglob
+# cp -avR /media/* /var/www/html/cdrom/
+2. /etc/httpd/httpd.conf
+ServerAdmin root@<repository server's IP>
+DocumentRoot /var/www/html/
+ServerName <repository server's IP>
+3.
+# httpd -t
+# service httpd start
+4. access the all important repomd.xml file with lynx
+# lynx http://<ip_address>/cdrom/repodata/repomd.xml
+5. If Apache throws a 403 forbidden error
+# chcon -R -t httpd_sys_content_t /var/www/html/cdrom/
+6. On the client system, configure a yum repo file that points to the server
+/etc/yum.repos.d/dvd.repo
+--------------------------------------------------------------------------------------------------------------------------
+| [RHEL5-Server-DVD]
+| name=Red Hat Enterprise Linux $releasever - $basearch (DVD)
+| baseurl=http://<ip_address>/cdrom/
+| enabled=1
+| gpgcheck=1 
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+--------------------------------------------------------------------------------------------------------------------------
+7. OPTIONAL: install/update Cluster and Cluster Storage packages in RHEL5
+/etc/yum.repos.d/dvd.repo
+--------------------------------------------------------------------------------------------------------------------------
+| [RHEL5-Cluster]
+| name=Red Hat Enterprise Linux Cluster
+| baseurl=http://<ip_address>/cdrom/Cluster
+| enabled=1
+| gpgcheck=1 
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| 
+| [RHEL5-ClusterStorage]
+| name=Red Hat Enterprise Linux - ClusterStorage
+| baseurl=http://<ip_address>/cdrom/ClusterStorage
+| enabled=1
+| gpgcheck=1 
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+--------------------------------------------------------------------------------------------------------------------------
+8. OPTIONAL: update HighAvailability and ResilientStorage packages in RHEL6
+ /etc/yum.repos.d/dvd.repo
+--------------------------------------------------------------------------------------------------------------------------
+| [RHEL6-HighAvailability]
+| name=Red Hat Enterprise Linux HighAvailability
+| baseurl=http://<ip_address>/cdrom/HighAvailability
+| enabled=1
+| gpgcheck=1 
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+| 
+| [RHEL6-ResilientStorage]
+| name=Red Hat Enterprise Linux - ResilientStorage
+| baseurl=http://<ip_address>/cdrom/ResilientStorage
+| enabled=1
+| gpgcheck=1 
+| gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
+--------------------------------------------------------------------------------------------------------------------------
+9. Verify the client configuration
+# yum clean all
+# yum repolist
+10. To update the client
+# yum update
+
+
+*************************************************************************************************************************************************
+
+HTTPD Source for kickstart installations:
+
+1. Install httpd package, if installed, skip this step.
+
+#  yum install httpd
+
+2. Create a directory /var/www/html/rhel6/, if created, skip this step.
+
+#  mkdir /var/www/html/rhel6/
+
+3. Insert the RHEL DVD into the DVD drive and mount that under /mnt
+
+#  mount /dev/sr0 /mnt
+
+4. Now prepare the shell to copy each and every content to /var/www/html/rhel6/ directory.
+
+#  shopt -s dotglob
+#  cp -avrf /mnt/* /var/www/html/rhel6/
+
+5. Start the service and make it on in chkconfig.
+
+#  service httpd restart;chkconfig httpd on
+
+6. Now use the following url in kickstart file, the installation will be done through http source.
+
+url --url=http://<ip>/rhel6/
+

@@ -1,0 +1,38 @@
+first step
+https://mojo.redhat.com/docs/DOC-92816
+
+documents
+Tools to drive customer 50% auto-solve rate
+https://mojo.redhat.com/docs/DOC-30480
+
+Track of projects for "50% auto-solve" tools (PEK team)
+https://mojo.redhat.com/docs/DOC-943649
+
+Diagnostics Apps in Labs
+https://mojo.redhat.com/docs/DOC-948751
+
+Passwords for Test Environments
+https://mojo.redhat.com/docs/DOC-117549
+
+Obtaining a development gear | Access Labs guide
+https://mojo.redhat.com/docs/DOC-951369
+
+Access Labs guide | parent doc
+https://mojo.redhat.com/docs/DOC-932924
+
+Andreas(Jboss developer studio)
+https://mojo.redhat.com/docs/DOC-77838
+
+Create a DDNS Entry
+https://mojo.redhat.com/docs/DOC-13143
+
+Licence
+https://mojo.redhat.com/docs/DOC-87791#jive_content_id_WebStorm
+
+RVM
+https://lab-rhevm-01.prod.gsslab.pek.redhat.com/webadmin/webadmin/WebAdmin.html?locale=en_US#login
+rhevadmin
+RedHat1!
+
+Labs apps reppo
+http://git.app.eng.bos.redhat.com/git/access-labs-appcodes.git

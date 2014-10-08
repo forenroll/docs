@@ -1,0 +1,53 @@
+install mysql2
+
+download mysql-connector-c(-6.1.5-win32)
+extract libmysql.dll and libmysql to <ruby dir>/bin
+
+mysqldev: &mysqldev
+  
+adapter: mysql2
+  
+database: "test"
+  
+username: "root"
+  
+password: "328427"
+  
+host: localhost 
+
+
+
+defaults: &defaults
+  
+pool: 5
+  
+timeout: 5000
+  
+encoding: utf8
+  
+# <<: *<%= ENV['RAILS_DB'] || "sqlite" %>
+  
+<<: *<%= ENV['RAILS_DB'] || "mysqldev" %>
+
+create user <username> identified by '<password>';
+grant select on test.* to <username>;
+grant all privileges on *.* to <username>
+
+
+------------ Install mysql -----------------------
+
+http://dev.mysql.com/doc/mysql-repo-excerpt/5.6/en/linux-installation-yum-repo.html
+
+Incorrect MySQL client library version
+gem uninstall mysql2
+gem install mysql2
+
+mysql.h is missing
+yum install mysql-devel
+
+-----------------------------------------------
+export
+mysqldump -u root -p test | gzip > /home/xmeng/Downloads/RHCI.sql.gz;
+
+import
+gunzip < [compressed_filename.sql.gz]  | mysql -u [user] -p[password] [databasename]

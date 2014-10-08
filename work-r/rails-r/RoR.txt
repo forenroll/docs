@@ -1,0 +1,203 @@
+安装RoR
+
+----------------------
+
+用源码、rvm方式安装。
+用源码安装的话需要自己去解决依赖关系
+选择rvm的安装方式
+
+安装rvm
+$curl -L get.rvm.io | bash -s stable
+
+使rvm命令生效
+$source ~/.rvm/scripts/rvm
+
+----------------------
+
+查看可用的ruby版本
+$rvm list known
+
+安装ruby(stable 1.9.3)
+$rvm install 1.9.3
+
+
+$ruby -v
+
+----------------------
+
+安装rails
+gem的默认源是http://rubygems.org，由于中国网络上的一些因素，国内用户使用gem命令安装东西时经常出错，所以要此把gem的默认源更换掉
+查看当前的gem源
+$gem sources -l
+如果没有意外，上面的命令会把http://rubygems.org/打印出来
+$gem sources -r http://rubygems.org/
+#添加taobao的源
+$gem sources -a http://ruby.taobao.org/
+
+安装rails
+$gem install rails
+
+$rails -v
+
+----------------------
+
+rails new rordemo
+
+----------------------
+
+cd rordemo
+
+----------------------
+
+rails g controller module1 index
+
+----------------------
+
+vim config/routes.rb
+  scope $lab_context do
+    require Rails.root.join('config', 'initializers', 'labs.rb')
+	get "/api/foo", to: 'api#get_foo'
+    get "/", to: 'application#index'
+  end
+
+----------------------
+
+vim config/initializers/labs.rb
+Rails.application.config.before_initialize do
+  $lab_id = 'rordemo'
+  $lab_name = 'Ruby on Rails demo'
+  $lab_context = "/labs/#{$lab_id}"
+  $is_prod_gear = ENV['HOME'].eql? "labsprod"
+  Rails.application.config.assets.prefix = "#{$lab_context}/assets"
+  Rails.application.config.action_controller.relative_url_root = $lab_context
+  ENV['RAILS_RELATIVE_URL_ROOT'] = $lab_context
+end
+
+----------------------
+
+vim app/views/layouts/application.html.erb
+<!DOCTYPE html>
+<html class="chrometwo bootstrap3 next" xmlns:ng="http://angularjs.org">
+  <head>
+	<title><%= $lab_name %></title>
+	<link href="/chrome_themes/umbra/s/chrometwo.css" rel="stylesheet" />
+	<link href="<%= $lab_context %>/css/app.css?bust=1" rel="stylesheet" />
+	<link rel="stylesheet" type="text/css" media="all" href="/chrome_themes/umbra/s/labs.css">
+    <script type="text/javascript" src="/webassets/avalon/j/lib/require.js"></script>
+    <script type="text/javascript" src="<%= $lab_context %>/js/app.js?bust=1"></script>
+	<%= csrf_meta_tags %>
+  </head>
+  <body class="chrometwo">
+	<div id="chrometwo">
+      <div id="main" style="visibility: hidden;">
+		<%= yield %>
+		<script type="text/javascript">
+		  window.breadcrumbs = [["Labs", "/labs/"], ["<%= $lab_name %>", "<%= $lab_context %>"]];
+		</script>
+	  </div>
+	</div>
+  </body>
+</html>
+
+----------------------
+
+mkdir -p public/labs/rordemo/js
+vim public/labs/rordemo/js/app.js
+/*global document, window, angular*/
+(function () {
+    "use strict";
+
+	var private_functions = {},
+		public_funtions = {};
+
+	window.chrometwo_require(['jquery', 'chrome_lib', '/webassets/avalon/j/lib/angular/1.2.8/angular.min.js'], function (jq, lib) {
+		var app = window.angular.module('labsdemoapprails', []);
+
+		app.controller('AppCtrl', function ($scope, $location, $http) {
+		});
+
+		window.angular.bootstrap(document, ['labsdemoapprails']);
+		jq('#main').css('visibility', 'visible');
+	});
+}());
+
+----------------------
+
+mkdir -p app/views/application
+vim app/views/application/index.html.erb
+<div ng-controller="AppCtrl">
+  <h1><%= $lab_name %></h1>
+
+  <p>Some blurb about your application</p>
+
+  <div class="row">
+
+	<div class="app-block col-md-6">
+	  <h2 class="title">Input</h2>
+	  <div class="content">
+		<div class="group group-grey">
+		  <form name="domain_form" role="form" class="form-horizontal">
+			<div class="form-group split">
+			  <label class="col-sm-3">Some thing</label>
+			  <div class="col-sm-9">
+				<input type="text" class="form-control" ng-model="obj.something" placeholder="Put stuff here..." />
+			  </div>
+			</div>
+			<button class="col-sm-12 btn btn-default" ng-click="check_server()">Check</button>
+		  </form>
+		</div>
+	  </div>
+	</div> <!-- /app-block -->
+
+
+	<div class="app-block col-md-6">
+	  <h2 class="title">Output</h2>
+	  <div id="results" class="content status_{{status}}">
+		<div class="group">
+		  <div ng-if="obj.something">
+			<h3>Title</h3>
+			<p>
+			  Some information about {{obj.something}}
+			</p>
+		  </div>
+		</div>
+	  </div>
+	</div> <!-- /app-block -->
+
+  </div> <!-- /row -->
+</div>
+
+----------------------
+
+rails server
+
+----------------------
+
+Listen 10000
+<VirtualHost *:10000>
+	SSLEngine On
+	SSLCertificateFile /etc/httpd/ssl/httpd.pem
+	SSLCertificateKeyFile /etc/httpd/ssl/httpd.key
+
+	ServerAdmin xmeng
+	ServerName localhost.localdomain
+
+	ProxyPass /webassets/ https://access.devgssci.devlab.phx1.redhat.com/webassets/
+	ProxyPass /chrome_themes/ https://access.devgssci.devlab.phx1.redhat.com/chrome_themes/
+	ProxyPass /services/ https://access.devgssci.devlab.phx1.redhat.com/services/
+	ProxyPass /click/ https://access.devgssci.devlab.phx1.redhat.com/click/
+	ProxyPass /suggest/ https://access.devgssci.devlab.phx1.redhat.com/suggest/
+	
+	ProxyPass /labs/   http://xmeng.usersys.redhat.com:3000/labs/
+</VirtualHost>
+
+----------------------
+
+deploy
+<app dir>/config/environments/production.rb
+config.assets.compile = true
+
+----------------------
+
+Rails+AngularJS demo app quickstart | Access Labs guide
+https://mojo.redhat.com/docs/DOC-955023

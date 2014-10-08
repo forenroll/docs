@@ -1,0 +1,15 @@
+
+1. Capabilities update frequency
+2. References static or dynamic
+3. Compatibility rules
+4. Table structure
+
+two tables
+t1
+pk proCode1 proCode2 compatibile References
+
+t2
+pk proCode1 proCode2 yesCapabilities noCapabilities naCapabilities references
+
+
+22nd Aug: Review
