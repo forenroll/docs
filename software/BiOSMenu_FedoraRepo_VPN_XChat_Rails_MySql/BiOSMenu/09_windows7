@@ -1,0 +1,17 @@
+#! /bin/bash
+     
+
+echo "Adding Windows7 entry to grub"
+
+ cat << EOF
+     
+
+menuentry "Windows 7" {
+
+ set root=hd0(0,1)
+
+ chainloader +1
+
+ }
+
+EOF

@@ -1,0 +1,38 @@
+cp -R /home/xmeng/private/rhdoc/rhdoc/work-r/labsapp/new/* ./newuirailsapp/
+
+********************************************* Test app *******************************************************************************
+
+rhdoc
+git clone ssh://53d9a75be0b8cd052a0000d8@rhdoc-maymeng.rhcloud.com/~/git/rhdoc.git/
+new
+git clone ssh://54276e435973ca5c18000964@rhdoc-maymeng.rhcloud.com/~/git/rhdoc.git/
+
+railsapp
+git clone ssh://53e181b83b696ea36b00012c@railsapp-xmeng.itos.redhat.com/~/git/railsapp.git/
+
+newuirailsapp
+git clone ssh://542378c825535d1044000086@newuirailsapp-xmeng.itos.redhat.com/~/git/newuirailsapp.git/
+
+importphp
+ssh 53ec61033b696ebf43000024@phpdataimport-xmeng.itos.redhat.com
+Root User: adminjaXpCSR Root Password: Z82i18sXaIlv 
+Database Name: phpdataimport
+mysql -u adminjaXpCSR -p
+use phpdataimport;
+https://phpdataimport-xmeng.itos.redhat.com/import.php
+
+********************************************* Labs app *******************************************************************************
+
+kvmbridgeconfiguratin
+git clone ssh://53a983ea25535dd7cb00000c@kvmbridgeconfiguration-labsdev.itos.redhat.com/~/git/kvmbridgeconfiguration.git/
+
+yumrepoconfighelper
+git clone ssh://53da39373b696eb4c6000002@yumrepoconfighelper-labsdev.itos.redhat.com/~/git/yumrepoconfighelper.git/
+
+rhcicompatibilitychecker
+git clone ssh://53e8b77f3b696e8498000030@rhcicompatibilitychecker-labsdev.itos.redhat.com/~/git/rhcicompatibilitychecker.git/
+Database: rhcicompatibilitychecker User: adminKtf1k8j Password: b8C1sZK2CUtk
+ssh 53e8b77f3b696e8498000030@rhcicompatibilitychecker-labsdev.itos.redhat.com
+mysql -u adminKtf1k8j -p
+use rhcicompatibilitychecker;
+cd app-root/repo/
